@@ -55,10 +55,27 @@
         ],
         "summary": "Get a list of all companies stored in application.",
         "description": "Retrieve all companies details.",
-        "operationId": "fetchAllCompaniesUsingGET",
+        "operationId": "searchCompaniesUsingGET",
         "produces": [
           "*/*",
-          "text/plain"
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
         ],
         "responses": {
           "200": {
@@ -66,7 +83,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/Companies"
+                "$ref": "#/definitions/Company"
               }
             }
           },
@@ -87,13 +104,13 @@
         ],
         "summary": "Receive a company details as a request to be created on Company Registration Office(CRO).",
         "description": "Receive a company details as a request to be created on Company Registration Office(CRO)",
-        "operationId": "createCompanyUsingPOST",
+        "operationId": "registerCompanyUsingPOST",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "*/*",
-          "text/plain"
+          "application/json;charset=UTF-8"
         ],
         "parameters": [
           {
@@ -110,7 +127,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Company"
             }
           },
           "201": {
@@ -129,6 +146,45 @@
       }
     },
     "/cro/companies/{companyId}": {
+      "get": {
+        "tags": [
+          "Company Registrations Office REST API Interface"
+        ],
+        "summary": "Search a company based on the received company Id.",
+        "description": "Search a company based on the received company Id.",
+        "operationId": "getCompanyByIdUsingGET",
+        "produces": [
+          "*/*",
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "path",
+            "description": "companyId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Company"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
       "put": {
         "tags": [
           "Company Registrations Office REST API Interface"
@@ -141,7 +197,7 @@
         ],
         "produces": [
           "*/*",
-          "text/plain"
+          "application/json;charset=UTF-8"
         ],
         "parameters": [
           {
@@ -166,54 +222,11 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Company"
             }
           },
           "201": {
             "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/cro/companies/{companyName}": {
-      "put": {
-        "tags": [
-          "Company Registrations Office REST API Interface"
-        ],
-        "summary": "Search a company based on the received company Id.",
-        "description": "Search a company based on the received company Id.",
-        "operationId": "searchCompanyByNameUsingPUT",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*",
-          "text/plain"
-        ],
-        "parameters": [
-          {
-            "name": "companyName",
-            "in": "path",
-            "description": "companyName",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "string"
-            }
           },
           "401": {
             "description": "Unauthorized"
@@ -232,18 +245,44 @@
         "tags": [
           "Company Registrations Office REST API Interface"
         ],
-        "summary": "Get a list of all stakeholders stored in application.",
+        "summary": "Search in or get a list of all stakeholders stored in application.",
         "description": "Retrieve all stakeholders registered in CRO.",
-        "operationId": "fetchAllStakeholdersUsingGET",
+        "operationId": "searchStakeholdersUsingGET",
         "produces": [
           "*/*",
-          "text/plain"
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "lastname",
+            "in": "query",
+            "description": "lastname",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "firstname",
+            "in": "query",
+            "description": "firstname",
+            "required": false,
+            "type": "string"
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Stakeholder"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Stakeholder"
+              }
             }
           },
           "401": {
@@ -269,7 +308,7 @@
         ],
         "produces": [
           "*/*",
-          "text/plain"
+          "application/json;charset=UTF-8"
         ],
         "parameters": [
           {
@@ -286,7 +325,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Stakeholder"
             }
           },
           "201": {
@@ -317,7 +356,7 @@
         ],
         "produces": [
           "*/*",
-          "text/plain"
+          "application/json;charset=UTF-8"
         ],
         "parameters": [
           {
@@ -342,51 +381,11 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Stakeholder"
             }
           },
           "201": {
             "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/cro/stakeholders/{name}": {
-      "get": {
-        "tags": [
-          "Company Registrations Office REST API Interface"
-        ],
-        "summary": "Search a stakeholder based on the received stakeholder name.",
-        "description": "Search a stakeholder based on the received stakeholder name.",
-        "operationId": "searchStakeholderByNameUsingGET",
-        "produces": [
-          "*/*",
-          "text/plain"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "description": "name",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "string"
-            }
           },
           "401": {
             "description": "Unauthorized"
@@ -407,10 +406,10 @@
         ],
         "summary": "Search a stakeholder based on the received stakeholder name.",
         "description": "Search a stakeholder based on the received stakeholder name.",
-        "operationId": "searchStakeholderByIdUsingGET",
+        "operationId": "getStakeholderByIdUsingGET",
         "produces": [
           "*/*",
-          "text/plain"
+          "application/json;charset=UTF-8"
         ],
         "parameters": [
           {
@@ -426,7 +425,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/Stakeholder"
             }
           },
           "401": {
@@ -1904,28 +1903,10 @@
     }
   },
   "definitions": {
-    "Companies": {
-      "type": "object",
-      "required": [
-        "companies"
-      ],
-      "properties": {
-        "companies": {
-          "type": "array",
-          "description": "A collection of the returned companies details",
-          "allowEmptyValue": false,
-          "items": {
-            "$ref": "#/definitions/Company"
-          }
-        }
-      },
-      "title": "Companies",
-      "description": "A lis of Companies resource representation"
-    },
     "Company": {
       "type": "object",
       "required": [
-        "owners"
+        "Stakeholders"
       ],
       "properties": {
         "Address": {
@@ -1950,7 +1931,7 @@
         "PhoneNumber": {
           "type": "string"
         },
-        "owners": {
+        "Stakeholders": {
           "type": "array",
           "description": "A collection of the returned company stakeholders",
           "allowEmptyValue": false,
