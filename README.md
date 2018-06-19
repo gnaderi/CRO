@@ -128,7 +128,6 @@ Company Registrations Office REST API Interface
 
 
 
-
 ## **Important!** all links are based on local deployment
 I have deployed the application to:
 * https://boiling-refuge-19519.herokuapp.com/cro 
