@@ -27,7 +27,7 @@ final public class DtoConverter {
                 com.getCity(), com.getCountry(), com.getEmail(), com.getPhoneNumber());
     }
     public StakeholderDto convertAndAttachCompanies(Stakeholder stakeholder) {
-        StakeholderDto dto = new StakeholderDto(stakeholder.getId(), stakeholder.getFirstName(), stakeholder.getLastName());
+       final StakeholderDto dto = new StakeholderDto(stakeholder.getId(), stakeholder.getFirstName(), stakeholder.getLastName());
 
         final List<CompanyDto> companies = stakeholder.getCompanies().stream().map(this::convert).collect(Collectors.toList());
         dto.setCompanies(companies);

@@ -34,7 +34,7 @@ public class CompanyRegistrationRequest implements Serializable {
     @JsonProperty("PhoneNumber")
     private String phoneNumber;
 
-    @JsonProperty("Stakeholders")
+    @JsonProperty(value = "Stakeholders")
     @ApiModelProperty(value = "A collection of the company stakeholders ID's", required = true, dataType = "List")
     private List<Integer> stakeholders;
 

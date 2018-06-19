@@ -53,7 +53,7 @@
         "tags": [
           "Company Registrations Office REST API Interface"
         ],
-        "summary": "Get a list of all companies stored in application.",
+        "summary": "Get/search a list of all companies stored in application.",
         "description": "Retrieve all companies details.",
         "operationId": "searchCompaniesUsingGET",
         "produces": [
@@ -62,19 +62,26 @@
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "CompanyName",
             "in": "query",
-            "description": "name",
+            "description": "name of the company",
             "required": false,
             "type": "string"
           },
           {
             "name": "id",
             "in": "query",
-            "description": "id",
+            "description": "searching for a company by id",
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "name": "showall",
+            "in": "query",
+            "description": "Show companies with all stakeholders details.",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
@@ -240,6 +247,54 @@
         }
       }
     },
+    "/cro/owners": {
+      "post": {
+        "tags": [
+          "Company Registrations Office REST API Interface"
+        ],
+        "summary": "Receive a company Id and a list of stakeholders Id's as a request to be registered as beneficial owner of the company.",
+        "description": "Receive a company Id and a list of stakeholders Id's as a request to be registered as beneficial owner of the company.",
+        "operationId": "registerBeneficialOwnerUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*",
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "req",
+            "description": "req",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BeneficialRegisterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Company"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/cro/stakeholders": {
       "get": {
         "tags": [
@@ -254,25 +309,32 @@
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "StakeholderName",
             "in": "query",
-            "description": "name",
+            "description": "FirstName or LastName of the stakeholder",
             "required": false,
             "type": "string"
           },
           {
-            "name": "lastname",
+            "name": "LastName",
             "in": "query",
-            "description": "lastname",
+            "description": "LastName of the stakeholder",
             "required": false,
             "type": "string"
           },
           {
-            "name": "firstname",
+            "name": "FirstName",
             "in": "query",
-            "description": "firstname",
+            "description": "FirstName of the stakeholder",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "showall",
+            "in": "query",
+            "description": "Show stakeholders with all companies owned details.",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
@@ -445,16 +507,19 @@
         "tags": [
           "basic-error-controller"
         ],
-        "summary": "errorHtml",
-        "operationId": "errorHtmlUsingGET",
+        "summary": "error",
+        "operationId": "errorUsingGET",
         "produces": [
-          "text/html"
+          "*/*"
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ModelAndView"
+              "type": "object",
+              "additionalProperties": {
+                "type": "object"
+              }
             }
           },
           "401": {
@@ -472,19 +537,22 @@
         "tags": [
           "basic-error-controller"
         ],
-        "summary": "errorHtml",
-        "operationId": "errorHtmlUsingHEAD",
+        "summary": "error",
+        "operationId": "errorUsingHEAD",
         "consumes": [
           "application/json"
         ],
         "produces": [
-          "text/html"
+          "*/*"
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ModelAndView"
+              "type": "object",
+              "additionalProperties": {
+                "type": "object"
+              }
             }
           },
           "204": {
@@ -502,19 +570,22 @@
         "tags": [
           "basic-error-controller"
         ],
-        "summary": "errorHtml",
-        "operationId": "errorHtmlUsingPOST",
+        "summary": "error",
+        "operationId": "errorUsingPOST",
         "consumes": [
           "application/json"
         ],
         "produces": [
-          "text/html"
+          "*/*"
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ModelAndView"
+              "type": "object",
+              "additionalProperties": {
+                "type": "object"
+              }
             }
           },
           "201": {
@@ -535,19 +606,22 @@
         "tags": [
           "basic-error-controller"
         ],
-        "summary": "errorHtml",
-        "operationId": "errorHtmlUsingPUT",
+        "summary": "error",
+        "operationId": "errorUsingPUT",
         "consumes": [
           "application/json"
         ],
         "produces": [
-          "text/html"
+          "*/*"
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ModelAndView"
+              "type": "object",
+              "additionalProperties": {
+                "type": "object"
+              }
             }
           },
           "201": {
@@ -568,16 +642,19 @@
         "tags": [
           "basic-error-controller"
         ],
-        "summary": "errorHtml",
-        "operationId": "errorHtmlUsingDELETE",
+        "summary": "error",
+        "operationId": "errorUsingDELETE",
         "produces": [
-          "text/html"
+          "*/*"
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ModelAndView"
+              "type": "object",
+              "additionalProperties": {
+                "type": "object"
+              }
             }
           },
           "204": {
@@ -595,19 +672,22 @@
         "tags": [
           "basic-error-controller"
         ],
-        "summary": "errorHtml",
-        "operationId": "errorHtmlUsingOPTIONS",
+        "summary": "error",
+        "operationId": "errorUsingOPTIONS",
         "consumes": [
           "application/json"
         ],
         "produces": [
-          "text/html"
+          "*/*"
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ModelAndView"
+              "type": "object",
+              "additionalProperties": {
+                "type": "object"
+              }
             }
           },
           "204": {
@@ -625,19 +705,22 @@
         "tags": [
           "basic-error-controller"
         ],
-        "summary": "errorHtml",
-        "operationId": "errorHtmlUsingPATCH",
+        "summary": "error",
+        "operationId": "errorUsingPATCH",
         "consumes": [
           "application/json"
         ],
         "produces": [
-          "text/html"
+          "*/*"
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/ModelAndView"
+              "type": "object",
+              "additionalProperties": {
+                "type": "object"
+              }
             }
           },
           "204": {
@@ -1903,6 +1986,32 @@
     }
   },
   "definitions": {
+    "BeneficialRegisterRequest": {
+      "type": "object",
+      "required": [
+        "CompanyId",
+        "Stakeholders"
+      ],
+      "properties": {
+        "CompanyId": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Company Id",
+          "allowEmptyValue": false
+        },
+        "Stakeholders": {
+          "type": "array",
+          "description": "A collection of the company stakeholders ID's",
+          "allowEmptyValue": false,
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "title": "BeneficialRegisterRequest",
+      "description": "Beneficial owner/stakeholder registration request resource representation"
+    },
     "Company": {
       "type": "object",
       "required": [

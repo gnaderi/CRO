@@ -8,6 +8,7 @@ import com.gnaderi.interview.cro.util.DtoConverter;
 import com.gnaderi.interview.cro.util.RequestValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Api(value = "Company Registrations Office REST API Interface", tags = "Company Registrations Office REST API Interface", description = "Company Registrations Office REST API Interface")
-@PropertySource(value = "classpath:application.properties")
 @RestController
 @RequestMapping(value = "/cro")
 public class StakeholderController {
@@ -40,32 +40,33 @@ public class StakeholderController {
     @Autowired
     private DtoConverter dtoConverter;
 
-    @ApiOperation(value = "Search in or get a list of all stakeholders stored in application.", notes = "Retrieve all stakeholders registered in CRO.", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response =  StakeholderDto.class, responseContainer = "List", httpMethod = "GET")
+    @ApiOperation(value = "Search in or get a list of all stakeholders stored in application.", notes = "Retrieve all stakeholders registered in CRO.", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = StakeholderDto.class, responseContainer = "List", httpMethod = "GET")
     @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
     @RequestMapping(value = "/stakeholders", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity searchStakeholders(@RequestParam(value = "name", required = false) String name,
-                                      @RequestParam(value = "lastname", required = false) String lastName,
-                                      @RequestParam(value = "firstname", required = false) String firstName) {
+    ResponseEntity searchStakeholders(@ApiParam(value = "FirstName or LastName of the stakeholder", name = "StakeholderName") @RequestParam(value = "name", required = false) String name,
+                                      @ApiParam(value = "LastName of the stakeholder", name = "LastName") @RequestParam(value = "lastname", required = false) String lastName,
+                                      @ApiParam(value = "FirstName of the stakeholder", name = "FirstName") @RequestParam(value = "firstname", required = false) String firstName,
+                                      @ApiParam(value = "Show stakeholders with all companies owned details.", name = "showall") @RequestParam(value = "showall", required = false) boolean showall) {
         try {
             List<Stakeholder> allStakeholders = new ArrayList<>();
             if (StringUtils.isAllEmpty(name, lastName, firstName)) {
                 LOGGER.info("Incoming request for get details of all stakeholders.");
                 allStakeholders.addAll(service.findAllStakeholders());
             } else if (StringUtils.isNotBlank(name) && StringUtils.isAllEmpty(lastName, firstName)) {
-                LOGGER.info("Incoming request for get details of any stakeholders with name#{}",name);
+                LOGGER.info("Incoming request for get details of any stakeholders with name#{}", name);
                 allStakeholders.addAll(service.findStakeholderByName(name));
             } else if (StringUtils.isNoneBlank(firstName, lastName)) {
-                LOGGER.info("Incoming request for get details of any stakeholders with FirstName#{} and LastName#{}",firstName,lastName);
+                LOGGER.info("Incoming request for get details of any stakeholders with FirstName#{} and LastName#{}", firstName, lastName);
                 allStakeholders.addAll(service.findStakeholderByName(firstName, lastName));
             } else if (StringUtils.isNotBlank(firstName)) {
-                LOGGER.info("Incoming request for get details of any stakeholders with FirstName#{}",firstName);
+                LOGGER.info("Incoming request for get details of any stakeholders with FirstName#{}", firstName);
                 allStakeholders.addAll(service.findStakeholderByName(firstName));
             } else {
-                LOGGER.info("Incoming request for get details of any stakeholders with LastName#{}",firstName);
+                LOGGER.info("Incoming request for get details of any stakeholders with LastName#{}", firstName);
                 allStakeholders.addAll(service.findStakeholderByName(lastName));
             }
-            List<StakeholderDto> stakeholderDtos = allStakeholders.stream().map(e -> dtoConverter.convert(e)).collect(Collectors.toList());
+            List<StakeholderDto> stakeholderDtos = allStakeholders.stream().map(e -> showall ? dtoConverter.convertAndAttachCompanies(e) : dtoConverter.convert(e)).collect(Collectors.toList());
             LOGGER.info("List Of All Stakeholders Stored In CRO:{}", stakeholderDtos);
             return new ResponseEntity<>(stakeholderDtos, HttpStatus.OK);
         } catch (Exception ex) {
@@ -118,6 +119,7 @@ public class StakeholderController {
             return new ResponseEntity<>("Unable to finish updating stakeholder operation:" + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @ApiOperation(value = "Search a stakeholder based on the received stakeholder name.", notes = "Search a stakeholder based on the received stakeholder name.", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = StakeholderDto.class, responseContainer = "String", httpMethod = "GET")
     @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
     @RequestMapping(value = "/stakeholders/{stakeholderId}", method = RequestMethod.GET)

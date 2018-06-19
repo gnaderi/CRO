@@ -194,29 +194,32 @@ Use one of the several ways of running a Spring Boot application. Below are just
    You'll receive a response similar to below:
    
     {
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MjkzMTcyMjEsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjU5MjI3YTQzLTM0OWEtNDIwOC1iNzQ2LWVjYWZkNjIwNmI0YiIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.xXJRYfejuQoyJKIkU07uNKp1zpHpauHJZEqQngutPms",
-        "token_type": "bearer",
-        "expires_in": 43199,
-        "scope": "read write",
-        "jti": "59227a43-349a-4208-b746-ecafd6206b4b"
-     }
+       "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJnbmFkZXJpIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImV4cCI6MTUzMDMwMjkzOSwiYXV0aG9yaXRpZXMiOlsiU1RBTkRBUkRfVVNFUiJdLCJqdGkiOiIyYmM1NTI0MS1iNDI4LTQxMTAtYTdmMS03ODYyODVmNzIyMmEiLCJjbGllbnRfaWQiOiJjcm9DbGllbnRJZCJ9.XOYGwx_qFixTWC031r2ynBWVthuhbdRDqwPoXEICtek",
+       "token_type": "bearer",
+       "expires_in": 863999,
+       "scope": "read write",
+       "jti": "2bc55241-b428-4110-a7f1-786285f7222a"
+    }
 
 #### Use the jwt token to access resources through your RESTful API
 ##### Access content available to all authenticated users(i.e gnaderi)
 Use the generated token  as the value of the Bearer in the Authorization header as follows or use [Postman](https://www.getpostman.com/) with that token:
    
         curl -k -X GET \
-        https://localhost:8443/cro/companies/ \
-        -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MjkzMTcyMjEsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjU5MjI3YTQzLTM0OWEtNDIwOC1iNzQ2LWVjYWZkNjIwNmI0YiIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.xXJRYfejuQoyJKIkU07uNKp1zpHpauHJZEqQngutPms' \
-        -H 'Cache-Control: no-cache' \
-        -H 'Postman-Token: 09d88b4c-83fa-4746-9b2e-61289bc1ecd2'
+          'https://localhost:8443/cro/companies?showall=true' \
+          -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJnbmFkZXJpIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImV4cCI6MTUzMDMwMjkzOSwiYXV0aG9yaXRpZXMiOlsiU1RBTkRBUkRfVVNFUiJdLCJqdGkiOiIyYmM1NTI0MS1iNDI4LTQxMTAtYTdmMS03ODYyODVmNzIyMmEiLCJjbGllbnRfaWQiOiJjcm9DbGllbnRJZCJ9.XOYGwx_qFixTWC031r2ynBWVthuhbdRDqwPoXEICtek' \
+          -H 'Cache-Control: no-cache' 
  
 A screenshot of [Postman](https://www.getpostman.com/):
 
  ![Postman](./src/main/resources/postman.png)
 
 
-###### The response for [Postman](https://www.getpostman.com/) or above cURL comand will all the companies stored at CRO(` https://localhost:8443/cro/companies`):
+###### The result for cURL command will be all the companies stored at CRO(` https://localhost:8443/cro/companies?showall=true`):
+- Same as [Postman](https://www.getpostman.com/) show in above screenshot
+- `showall=true` show companies with all of their stakeholders
+- `id=?` will try to find a company based on provided value
+- `name=?` will try to search the a comany based on provided name
         
         [
              {
@@ -293,27 +296,32 @@ A screenshot of [Postman](https://www.getpostman.com/):
                  ]
              }
          ]
+##### Search for a company with a `name=mastercard` as query param
 
+    curl -k -X GET \
+      'https://localhost:8443/cro/companies?name=mastercard' \
+      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDI2ODgsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjQ0NmI4YzhhLWIyN2ItNGE4YS04NjRjLWY0OWNhNTQ5ZmFhZCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.gCTCbYi44uBJR8MzE_8actSuRSDhMOFW0gYOtCjMhz0' \
+      -H 'Cache-Control: no-cache'
+      
 ##### Access content available only to an `admin` user:
 As with the previous example first generate an access token for the admin user with the credentials provided above then run       
 1. Generate access token for Admin:
        
-       {
-           "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MjkzMjAxMzgsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6Ijc3ZmU2NzQ1LWQzNDQtNDk5My1iMTdiLTExYTg3M2FhODU5MSIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.JqQ_FSrQWpJE9mg90DrNO_FBir8UVk2HNdeYPH1i3z8",
+        {
+           "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDMwMDksImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6ImZmMDUwMTliLTFiMGQtNDA0ZS1iYWNkLTFjOGZhN2MxMjE4MyIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.nGBC6HPYsVaD3M5kpBLaOSDW5Jt9LQnLdznt2gpE1SA",
            "token_type": "bearer",
-           "expires_in": 43199,
+           "expires_in": 864000,
            "scope": "read write",
-           "jti": "77fe6745-d344-4993-b17b-11a873aa8591"
+           "jti": "ff05019b-1b0d-404e-bacd-1c8fa7c12183"
         }
  
 2.  Then register/create a company:
 
         curl -k -X POST \
            https://localhost:8443/cro/companies/ \
-               -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MjkzMTcyMjEsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjU5MjI3YTQzLTM0OWEtNDIwOC1iNzQ2LWVjYWZkNjIwNmI0YiIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.xXJRYfejuQoyJKIkU07uNKp1zpHpauHJZEqQngutPms' \
+               -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDI2ODgsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjQ0NmI4YzhhLWIyN2ItNGE4YS04NjRjLWY0OWNhNTQ5ZmFhZCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.gCTCbYi44uBJR8MzE_8actSuRSDhMOFW0gYOtCjMhz0' \
            -H 'Cache-Control: no-cache' \
            -H 'Content-Type: application/json' \
-           -H 'Postman-Token: e9c3a266-6198-4990-85fa-7fbbb2c74c57' \
            -d '{
             "Name": "Facebook.ie",
             "Address": "Hanover Reach 5/7 Hanover Quay",
@@ -322,7 +330,7 @@ As with the previous example first generate an access token for the admin user w
             "Email": "info@facebook.ie",
             "PhoneNumber": "0174320",
             "Stakeholders": [1,2]
-         }
+         }'
             
 3. The result will be like below:
     
@@ -337,12 +345,11 @@ As with the previous example first generate an access token for the admin user w
         }          
         
 ##### Update a company
-    curl -X PUT \
+    curl -k -X PUT \
       https://localhost:8443/cro/companies/2 \
-      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1Mjk0MDg4MTQsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6ImU3ZGVlNWI4LTk1MjgtNGZiNy04MTllLTQ0ZWRhY2JlZjlkMCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.u2i4gpBN_ARWr64mM7dEmN5VEa1D7lfKthmvYqI9NtY' \
+      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDI2ODgsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjQ0NmI4YzhhLWIyN2ItNGE4YS04NjRjLWY0OWNhNTQ5ZmFhZCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.gCTCbYi44uBJR8MzE_8actSuRSDhMOFW0gYOtCjMhz0' \
       -H 'Cache-Control: no-cache' \
       -H 'Content-Type: application/json' \
-      -H 'Postman-Token: 40ad8785-a393-4565-b6c2-74e87f4ac42a' \
       -d '{
        "Name": "Facebook.ie",
        "Address": "Hanover Reach 5/7 Hanover Quay",
@@ -352,49 +359,51 @@ As with the previous example first generate an access token for the admin user w
        "PhoneNumber": "0174320"
     }'
     
-    
-##### Search for a company with a `name=mastercard` as query param
-
-    curl -X GET \
-      'https://localhost:8443/cro/companies?name=mastercard' \
-      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJnbmFkZXJpIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImV4cCI6MTUyOTM4NjE3NiwiYXV0aG9yaXRpZXMiOlsiU1RBTkRBUkRfVVNFUiJdLCJqdGkiOiJhMTc0MGQ0Yi1jZTg1LTRkYzctYTIzZi1iNTM0NGM0ZTIwYjMiLCJjbGllbnRfaWQiOiJjcm9DbGllbnRJZCJ9.xyMJuM_AXQGnhFg-JSXsNDUlr5WlPmYheUAJOFO4wU0' \
-      -H 'Cache-Control: no-cache' \
-      -H 'Postman-Token: b6bd44c5-427e-458c-b1f1-198ddeb2264b'
       
 
 
 ### Same story to register/update/search/get a stakeholder
 ####List of stakeholders
-    curl -X GET \
-      https://localhost:8443/cro/stakeholders \
-      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJnbmFkZXJpIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImV4cCI6MTUyOTM4NjE3NiwiYXV0aG9yaXRpZXMiOlsiU1RBTkRBUkRfVVNFUiJdLCJqdGkiOiJhMTc0MGQ0Yi1jZTg1LTRkYzctYTIzZi1iNTM0NGM0ZTIwYjMiLCJjbGllbnRfaWQiOiJjcm9DbGllbnRJZCJ9.xyMJuM_AXQGnhFg-JSXsNDUlr5WlPmYheUAJOFO4wU0' \
-      -H 'Cache-Control: no-cache' \
-      -H 'Postman-Token: 648ef95a-56da-44a9-b172-173f5c2b8d4e'
+- Base url: `https://localhost:8443/cro/stakeholders` list all stakeholders
+- `https://localhost:8443/cro/stakeholders?name=?` search any stakeholder with first or lastname like `name`
+- `showall=true` show stakeholder with all companies that own them.
+- few more params ....
+
+        curl -X GET \
+          https://localhost:8443/cro/stakeholders \
+          -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDI2ODgsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjQ0NmI4YzhhLWIyN2ItNGE4YS04NjRjLWY0OWNhNTQ5ZmFhZCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.gCTCbYi44uBJR8MzE_8actSuRSDhMOFW0gYOtCjMhz0' \
+          -H 'Cache-Control: no-cache' \
+          -H 'Postman-Token: 648ef95a-56da-44a9-b172-173f5c2b8d4e'
       
 #### List of stakeholders based on firstName and lastName   
-    curl -X GET \
+    curl -k -X GET \
       'https://localhost:8443/cro/stakeholders?firstname=larry&lastname=page' \
-      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJnbmFkZXJpIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImV4cCI6MTUyOTM4NjE3NiwiYXV0aG9yaXRpZXMiOlsiU1RBTkRBUkRfVVNFUiJdLCJqdGkiOiJhMTc0MGQ0Yi1jZTg1LTRkYzctYTIzZi1iNTM0NGM0ZTIwYjMiLCJjbGllbnRfaWQiOiJjcm9DbGllbnRJZCJ9.xyMJuM_AXQGnhFg-JSXsNDUlr5WlPmYheUAJOFO4wU0' \
-      -H 'Cache-Control: no-cache' \
-      -H 'Postman-Token: 5f115b8b-e86f-45cc-a8f5-9701d07c8b0d'
+      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDI2ODgsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjQ0NmI4YzhhLWIyN2ItNGE4YS04NjRjLWY0OWNhNTQ5ZmFhZCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.gCTCbYi44uBJR8MzE_8actSuRSDhMOFW0gYOtCjMhz0' \
+      -H 'Cache-Control: no-cache' 
       
 #### Create a Stakeholder
-    curl -X POST \
+    curl -k -X POST \
       https://localhost:8443/cro/stakeholders \
-      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1Mjk0MDg4MTQsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6ImU3ZGVlNWI4LTk1MjgtNGZiNy04MTllLTQ0ZWRhY2JlZjlkMCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.u2i4gpBN_ARWr64mM7dEmN5VEa1D7lfKthmvYqI9NtY' \
+      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDI2ODgsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjQ0NmI4YzhhLWIyN2ItNGE4YS04NjRjLWY0OWNhNTQ5ZmFhZCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.gCTCbYi44uBJR8MzE_8actSuRSDhMOFW0gYOtCjMhz0' \
       -H 'Cache-Control: no-cache' \
       -H 'Content-Type: application/json' \
-      -H 'Postman-Token: 456a3a35-e75d-4a38-9553-b6a27b804308' \
       -d '{
         "FirstName":"root",
         "LastName":"safe"
     }'
     
+   
     
-    
-    
-    
-    
+ #### register a list of Stakeholders as beneficial owners of a company   
+      curl -k -X POST \
+        https://localhost:8443/cro/owners \
+        -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDI2ODgsImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6IjQ0NmI4YzhhLWIyN2ItNGE4YS04NjRjLWY0OWNhNTQ5ZmFhZCIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.gCTCbYi44uBJR8MzE_8actSuRSDhMOFW0gYOtCjMhz0' \
+        -H 'Cache-Control: no-cache' \
+        -H 'Content-Type: application/json' \
+        -d '{
+        "companyId":1,
+        "stakeholders":[3,4,5]
+      }'  
     
     
 

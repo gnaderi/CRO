@@ -2,6 +2,7 @@ package com.gnaderi.interview.cro.util;
 
 
 import com.gnaderi.interview.cro.CROException;
+import com.gnaderi.interview.cro.inbound.BnfOwnerRegReq;
 import com.gnaderi.interview.cro.inbound.CompanyRegistrationRequest;
 import com.gnaderi.interview.cro.inbound.StakeholderRegistrationRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +37,14 @@ public final class RequestValidator {
         } catch (NullPointerException | IllegalArgumentException ex) {
             LOGGER.error("Invalid StakeholderRegistrationRequest:", ex);
             throw new CROException("Invalid registrationRequest!");
+        }
+    }
+    public void validateRequest(final BnfOwnerRegReq req) throws CROException {
+        try {
+            //TODO
+        } catch (NullPointerException | IllegalArgumentException ex) {
+            LOGGER.error("Invalid BnfOwnerRegReq:", ex);
+            throw new CROException("Invalid Request!");
         }
     }
 }

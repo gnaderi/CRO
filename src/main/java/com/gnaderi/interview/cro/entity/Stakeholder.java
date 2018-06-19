@@ -65,7 +65,7 @@ public class Stakeholder {
         return Objects.hash(id, firstName, lastName);
     }
 
-    @ManyToMany(targetEntity = Stakeholder.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = Company.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "BENEFICIAL_OWNER",
             joinColumns = @JoinColumn(name = "STAKEHOLDER_ID", referencedColumnName = "ID"),
