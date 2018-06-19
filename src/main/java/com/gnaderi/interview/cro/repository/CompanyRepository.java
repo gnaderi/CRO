@@ -11,5 +11,5 @@ import java.util.List;
 @Transactional
 @Repository
 public interface CompanyRepository extends CrudRepository<Company, Integer> {
-    List<Company> findCompanyByName(String croName);
+    List<Company> findCompanyByNameIsContaining(String croName);
 }

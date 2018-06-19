@@ -12,4 +12,6 @@ import java.util.List;
 @Repository
 public interface StakeholderRepository extends CrudRepository<Stakeholder, Integer> {
     List<Stakeholder> findStakeholdersByFirstNameIsLikeOrLastNameIsLike(String firstName, String lastName);
+
+    List<Stakeholder> findStakeholdersByFirstNameIsLikeAndLastNameIsLike(String firstName, String lastName);
 }

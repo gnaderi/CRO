@@ -9,6 +9,7 @@ import com.gnaderi.interview.cro.util.DtoConverter;
 import com.gnaderi.interview.cro.util.RequestValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,17 +42,28 @@ public class CompanyRegOfficeController {
     @Autowired
     private DtoConverter dtoConverter;
 
-    @ApiOperation(value = "Get a list of all companies stored in application.", notes = "Retrieve all companies details.", produces = MediaType.TEXT_PLAIN_VALUE, response = CompanyDto.class, responseContainer = "List", httpMethod = "GET")
+    @ApiOperation(value = "Get a list of all companies stored in application.", notes = "Retrieve all companies details.", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = CompanyDto.class, responseContainer = "List", httpMethod = "GET")
+    @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
     @RequestMapping(value = "/companies", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity fetchAllCompanies() {
+    ResponseEntity searchCompanies(@RequestParam(value = "name", required = false) String name, @RequestParam(value = "id", required = false) Integer id) {
         try {
-            LOGGER.info("Incoming request for all companies:");
-            List<Company> allCompanies = service.findAllCompanies();
-            final List<CompanyDto> companies = allCompanies.stream().map(e -> dtoConverter.convertAndAttachStakeholders(e)).collect(Collectors.toList());
+            List<Company> foundCompanies = new ArrayList<>();
+            if (StringUtils.isBlank(name) && id == null) {
+                LOGGER.info("Incoming request for all companies:");
+                foundCompanies.addAll(service.findAllCompanies());
+            } else if (id != null) {
+                LOGGER.info("Incoming request for get details of company Id#{}",id);
+                foundCompanies.add(service.findCompanyById(id));
+            } else {
+                LOGGER.info("Incoming request for get details of company name#{}",name);
+                foundCompanies.addAll(service.findCompanyByName(name));
+            }
+            final List<CompanyDto> companies = foundCompanies.stream().map(e -> dtoConverter.convertAndAttachStakeholders(e)).collect(Collectors.toList());
 
             LOGGER.info("List of the companies:{}", companies);
             return new ResponseEntity<>(companies, HttpStatus.OK);
+
         } catch (Exception ex) {
 
             return new ResponseEntity("Unable to finish fetch request:" + ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -59,10 +73,11 @@ public class CompanyRegOfficeController {
 
     @ApiOperation(value = "Receive a company details as a request to be created on Company Registration Office(CRO).",
             notes = "Receive a company details as a request to be created on Company Registration Office(CRO)",
-            produces = MediaType.TEXT_PLAIN_VALUE, response = String.class, responseContainer = "String", httpMethod = "POST")
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = CompanyDto.class, responseContainer = "String", httpMethod = "POST")
+    @PreAuthorize("hasAuthority('ADMIN_USER')")
     @RequestMapping(value = "/companies", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity createCompany(@RequestBody CompanyRegistrationRequest request) {
+    ResponseEntity registerCompany(@RequestBody CompanyRegistrationRequest request) {
         LOGGER.info("Incoming request to register a Company info#{}.", request);
         try {
             requestValidator.validateRequest(request);
@@ -83,7 +98,10 @@ public class CompanyRegOfficeController {
 
     }
 
-    @ApiOperation(value = "Receive a company details as an update request to be updated on Company Registration Office.", notes = "Receive an updateRequest for update an existing company in store.", produces = MediaType.TEXT_PLAIN_VALUE, response = String.class, responseContainer = "String", httpMethod = "PUT")
+    @ApiOperation(value = "Receive a company details as an update request to be updated on Company Registration Office.",
+            notes = "Receive an updateRequest for update an existing company in store.", produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = CompanyDto.class, responseContainer = "String", httpMethod = "PUT")
+    @PreAuthorize("hasAuthority('ADMIN_USER')")
     @RequestMapping(value = "/companies/{companyId}", method = RequestMethod.PUT)
     public @ResponseBody
     ResponseEntity updateCompany(@PathVariable Integer companyId, @RequestBody CompanyRegistrationRequest updateRequest) {
@@ -108,15 +126,17 @@ public class CompanyRegOfficeController {
         }
     }
 
-    @ApiOperation(value = "Search a company based on the received company Id.", notes = "Search a company based on the received company Id.", produces = MediaType.TEXT_PLAIN_VALUE, response = String.class, responseContainer = "String", httpMethod = "PUT")
+    @ApiOperation(value = "Search a company based on the received company Id.", notes = "Search a company based on the received company Id.",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE, response = CompanyDto.class, responseContainer = "String", httpMethod = "GET")
+    @PreAuthorize("hasAuthority('ADMIN_USER') or hasAuthority('STANDARD_USER')")
     @RequestMapping(value = "/companies/{companyId}", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity searchCompanyById(@PathVariable Integer companyId) {
-        LOGGER.info("Incoming request to find/search for a company#{}.", companyId);
+    ResponseEntity getCompanyById(@PathVariable Integer companyId) {
+        LOGGER.info("Incoming request to get details of a Company Id#{}.", companyId);
         try {
             Company company = service.findCompanyById(companyId);
             if (company != null) {
-                CompanyDto dto = dtoConverter.convert(company);
+                CompanyDto dto = dtoConverter.convertAndAttachStakeholders(company);
                 LOGGER.info("Found Company Info:{}", dto);
                 return new ResponseEntity<>(dto, HttpStatus.OK);
             } else {
@@ -126,23 +146,5 @@ public class CompanyRegOfficeController {
             return new ResponseEntity<>("Unable to finish searching for a company operation:" + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    @ApiOperation(value = "Search a company based on the received company Id.", notes = "Search a company based on the received company Id.", produces = MediaType.TEXT_PLAIN_VALUE, response = String.class, responseContainer = "String", httpMethod = "PUT")
-    @RequestMapping(value = "/companies/{companyName}", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity searchCompanyByName(@PathVariable String companyName) {
-        LOGGER.info("Incoming request to find/search for a company#{}.", companyName);
-        try {
-            List<Company> companies = service.findCompanyByName(companyName);
-            if (companies != null && !companies.isEmpty()) {
-                List<CompanyDto> foundCompanies = companies.stream().map(e -> dtoConverter.convert(e)).collect(Collectors.toList());
-                LOGGER.info("Founded Company Info:{}", foundCompanies);
-                return new ResponseEntity<>(foundCompanies, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Company not found.", HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<>("Unable to finish searching for a company operation:" + ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+    //TODO add beneficial owner to the companies
 }

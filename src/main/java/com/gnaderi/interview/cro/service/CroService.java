@@ -31,6 +31,8 @@ public interface CroService {
 
     List<Stakeholder> findStakeholderByName(String stakeholderName);
 
+    List<Stakeholder> findStakeholderByName(String firstName, String lastName);
+
     Stakeholder findStakeholderById(Integer stakeholderId);
 
     void delete(Stakeholder stakeholder);

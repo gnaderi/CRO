@@ -79,7 +79,7 @@ public class SimpleCroService implements CroService {
 
     @Override
     public List<Company> findCompanyByName(String companyName) {
-        return companyRepo.findCompanyByName(companyName);
+        return companyRepo.findCompanyByNameIsContaining(companyName);
     }
 
     @Override
@@ -95,6 +95,11 @@ public class SimpleCroService implements CroService {
     @Override
     public List<Stakeholder> findStakeholderByName(String stakeholderName) {
         return stakeholderRepo.findStakeholdersByFirstNameIsLikeOrLastNameIsLike(stakeholderName, stakeholderName);
+    }
+
+    @Override
+    public List<Stakeholder> findStakeholderByName(String firstName, String lastName) {
+        return stakeholderRepo.findStakeholdersByFirstNameIsLikeAndLastNameIsLike(firstName, lastName);
     }
 
     @Override
