@@ -130,8 +130,8 @@ Company Registrations Office REST API Interface
 
 ## **Important!** all links are based on local deployment
 I have deployed the application to:
-* https://boiling-refuge-19519.herokuapp.com/cro 
-* You will need to replace `https://localhost:8443/cro` or `http://localhost:8080/cro` with above URL to test the online one!
+* https://cro-app-1.herokuapp.com/cro/companies
+* You will need to replace `https://localhost:8443/cro` with above URL to test the online one!
 
 ## Tools
 Only tools and API was used to build this project is:
@@ -407,7 +407,11 @@ As with the previous example first generate an access token for the admin user w
     
     
 
-
+## Get all companies by using the version upload in HEROKU
+    curl -k -X GET \
+      'https://cro-app-1.herokuapp.com/cro/companies?showall=true' \
+      -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsic2FtcGxlSnd0UmVzb3VyY2VJZCJdLCJ1c2VyX25hbWUiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJleHAiOjE1MzAzMDMwMDksImF1dGhvcml0aWVzIjpbIlNUQU5EQVJEX1VTRVIiLCJBRE1JTl9VU0VSIl0sImp0aSI6ImZmMDUwMTliLTFiMGQtNDA0ZS1iYWNkLTFjOGZhN2MxMjE4MyIsImNsaWVudF9pZCI6ImNyb0NsaWVudElkIn0.nGBC6HPYsVaD3M5kpBLaOSDW5Jt9LQnLdznt2gpE1SA' \
+      -H 'Cache-Control: no-cache' \
 
 
 
