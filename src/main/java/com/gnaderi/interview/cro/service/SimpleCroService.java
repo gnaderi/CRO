@@ -10,16 +10,13 @@ import com.gnaderi.interview.cro.repository.StakeholderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@Qualifier("SimpleCroService")
 public class SimpleCroService implements CroService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleCroService.class);
     @Autowired

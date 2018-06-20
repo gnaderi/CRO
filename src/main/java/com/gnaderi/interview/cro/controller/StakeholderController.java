@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 public class StakeholderController {
     private static final Logger LOGGER = LoggerFactory.getLogger(StakeholderController.class);
 
-    @Qualifier("SimpleCroService")
     @Autowired
     private CroService service;
 
