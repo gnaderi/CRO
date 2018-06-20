@@ -32,7 +32,7 @@ No javascript client
 
 ### Code repository and deployed app
 ● Code have been pushed to public code repository:[CRO Project at Github.com](https://github.com/gnaderi/CRO.git)
-● CRO project have been published on a [Heroku](https://www.heroku.com/): [Live CRO](TBD)
+● CRO project have been published on a Heroku: [Live CRO](//cro-app-1.herokuapp.com/cro/)
 
 ### Authentication​ to your web service, but propose a protocol / method and justify your choice
 - I have implemented JSON Web Token. 
